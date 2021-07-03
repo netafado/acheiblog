@@ -1,0 +1,54 @@
+.mainBanner{
+    display: flex;
+    align-items: center;
+    padding-left: 60px;
+    padding-right: 60px;
+    .item-texto{
+        width: 42%;
+    }
+    .item-img{
+        padding-left: 140px;
+        img{
+            max-width: 800px;
+            margin-top: 40px;
+        }
+    }
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+.main{
+    overflow: hidden;
+}
+.beneficios{
+    h4{
+        margin-top: 10px;
+    }
+}
+.moeda{
+    background-size: contain;
+    background-position: center, center;
+    background-repeat: no-repeat;
+    height: 140px;
+    width: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h4{
+        margin-top: 10px;
+    }
+    & > * {
+        margin-top: 25px;  
+    }
+}
+
+.redeSociais{
+    left: 48px;
+    bottom: 30px;
+}
+
+@media screen and (max-width: 538px){
+    h1.title{
+        font-size: 1.8rem;
+    }
+}

@@ -1,0 +1,10 @@
+.op-cadastro{
+    & > *{
+        flex: 1;
+        cursor: pointer;
+        transition: 0.4s;
+        &:hover{
+            transform: scale(1.1);
+        }
+    }
+}
