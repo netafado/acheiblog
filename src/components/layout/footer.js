@@ -2,7 +2,7 @@
 
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
-import Image from 'next/image'
+
 function DarkFooter() {
   return (
     <footer className=" bg-white pt-4">
@@ -13,9 +13,9 @@ function DarkFooter() {
           </Col>
         </Row>
         <Row className="justify-content-center mt-2 mb-2">
-            <a target="_blank" rel='noreferrer noopener' href="https://www.facebook.com/Achei-Fornecedor-113737716707790/"><Image width={25} height={25} src={"/assets/img/facebook.svg"} className="m-1" alt="Facebook" /></a>
-            <a target="_blank" rel='noreferrer noopener' href="https://www.linkedin.com/company/acheifornecedor"><Image width={25} height={25} src={"/assets/img/linkdin.svg"} className="m-1"  alt="Linkdin" /></a>
-            <a target="_blank" rel='noreferrer noopener' href="https://www.instagram.com/acheifornecedor/?igshid=bpakap0k1iae"><Image width={25} height={25} src={"/assets/img/instagram.svg"} className="m-1" alt="Instagram" /></a>
+            <a target="_blank" rel='noreferrer noopener' href="https://www.facebook.com/Achei-Fornecedor-113737716707790/"><img width={25} height={25} src={"/assets/img/facebook.svg"} className="m-1" alt="Facebook" /></a>
+            <a target="_blank" rel='noreferrer noopener' href="https://www.linkedin.com/company/acheifornecedor"><img width={25} height={25} src={"/assets/img/linkdin.svg"} className="m-1"  alt="Linkdin" /></a>
+            <a target="_blank" rel='noreferrer noopener' href="https://www.instagram.com/acheifornecedor/?igshid=bpakap0k1iae"><img width={25} height={25} src={"/assets/img/instagram.svg"} className="m-1" alt="Instagram" /></a>
         </Row>
         <Row>
 

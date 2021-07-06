@@ -26,9 +26,9 @@ function Single(props) {
                   <BreadcrumbItem><Link href="/">Home</Link></BreadcrumbItem>
                   <BreadcrumbItem active>{post.title}</BreadcrumbItem>
                 </Breadcrumb>
-                <h1>{props.post.title}</h1>
-                <label></label>
-                <div dangerouslySetInnerHTML={{ __html: props.post.html }} />            
+                 <h1>{props.post.title}</h1>
+                  <div dangerouslySetInnerHTML={{ __html: props.post.html }} />     
+
               </CardBody>
               </Card>
             </Col>
@@ -49,7 +49,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const post = await getSinglePost(context.params.slug)
-  console.log("post", post)
 
   if (!post) {
     return {
@@ -58,7 +57,8 @@ export async function getStaticProps(context) {
   }
 
   return {
-    props: { post }
+    props: { post },
+    revalidate: 40
   }
 }
 

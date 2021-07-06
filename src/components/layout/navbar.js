@@ -49,14 +49,15 @@ function IndexNavbar() {
       <Navbar className={"fixed-top " + navbarColor} expand="lg" color="white" >
         <Container fluid>
           <div className="navbar-translate">
-            <Link href="/">
+            
               <NavbarBrand
                 target="_blank"
                 id="navbar-brand"
               >
-                <Image src={"/assets/img/logo@2x.png"} width="100" height="48" style={{maxWidth: 100}} alt="Logo Achei fornecedor"/>
+                <Link href="/" passHref>
+                  <img src={"/assets/img/logo@2x.png"} width="100" height="48" style={{maxWidth: 100}} alt="Logo Achei fornecedor"/>
+                </Link>
               </NavbarBrand>
-            </Link>
 
             <UncontrolledTooltip target="#navbar-brand">
               Achei fornecedor
