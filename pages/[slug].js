@@ -6,8 +6,10 @@ import LoadingPage from "../src/components/loader/page"
 import {getSinglePost, getPosts} from "../src/api"
 import { Card, CardBody, Container, Row, Col, Breadcrumb, BreadcrumbItem } from "reactstrap"
 import  Link from "next/link"
+import Head from "next/head"
 function Single(props) {
   const {post} = props
+  console.log(post)
   React.useEffect(() => {
     prepararTela();
 
@@ -15,6 +17,13 @@ function Single(props) {
   }, []);
   return (
       <Layout >
+        <Head>
+          <meta property="og:url"           content={ `https://main.d2jykcq4voqie4.amplifyapp.com/${post.slug}` }/>
+          <meta property="og:type"          content="company" />
+          <meta property="og:title"         content={post.og_title  || post.title} />
+          <meta property="og:description"   content={post.og_description || post.description} />
+          <meta property="og:image"         content={post.og_image || post.feature_image} />
+        </Head>
         <LoadingPage loading={false}/>
         <BannerTopo post={props.post}/>
         <Container className="container" style={{marginTop: -30, zIndex: 9, position: "relative"}}>
