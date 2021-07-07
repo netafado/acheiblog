@@ -15,6 +15,13 @@
 // example pages and sections
 @import "now-ui-kit/sections";
 
+.bg-left{
+    background-image: url(/assets/img/bg-left.png);
+    background-size: 220px;
+    background-position: left top;
+    background-repeat: no-repeat;
+}
+
 .overImage{
     position: absolute;
     top: 10px;

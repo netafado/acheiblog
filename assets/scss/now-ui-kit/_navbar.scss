@@ -139,9 +139,9 @@
     }
 
     &.navbar-transparent{
-        background-color: $transparent-bg !important;
+        background: rgba( $primary-color, $alpha: 0) !important;
         box-shadow: none;
-        color: $white-color;
+        color: $white-color; 
         padding-top: 0;
     }
     .nav-link.active{

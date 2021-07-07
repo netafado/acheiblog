@@ -46,16 +46,16 @@ function IndexNavbar() {
           }}
         />
       ) : null}
-      <Navbar className={"fixed-top " + navbarColor} expand="lg" color="white" >
+      <Navbar className={"fixed-top " + navbarColor} expand="lg" color="primary" >
         <Container fluid>
-          <div className="navbar-translate">
+          <div className="navbar-translate ">
             
               <NavbarBrand
                 target="_blank"
                 id="navbar-brand"
               >
                 <Link href="/" passHref>
-                  <img src={"/assets/img/logo@2x.png"} width="100" height="48" style={{maxWidth: 100}} alt="Logo Achei fornecedor"/>
+                  <img src={"/assets/img/logo@2x-branco.png"} width="100" height="48" style={{maxWidth: 100}} alt="Logo Achei fornecedor"/>
                 </Link>
               </NavbarBrand>
 

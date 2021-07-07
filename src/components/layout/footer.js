@@ -9,7 +9,7 @@ function DarkFooter() {
       <Container>
         <Row>
           <Col className="align-self-center text-center">
-            <img className="m-auto" src={"/assets/img/logo@2x.png"} width={120} height={58}/>
+            <img className="m-auto" src={"/assets/img/logo@2x.png"} width={120} height={58} />
           </Col>
         </Row>
         <Row className="justify-content-center mt-2 mb-2">

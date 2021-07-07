@@ -10,8 +10,8 @@ function Index(props) {
   return (
     <div>
       <Navbar/>
-      <div className="wrapper">
-        <div className="main">
+      <div className="wrapper ">
+        <div className="main bg-left">
           { props.children }
         </div>
         <Footer />

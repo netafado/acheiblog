@@ -28,7 +28,6 @@ function Single(props) {
                 </Breadcrumb>
                  <h1>{props.post.title}</h1>
                   <div dangerouslySetInnerHTML={{ __html: props.post.html }} />     
-
               </CardBody>
               </Card>
             </Col>
