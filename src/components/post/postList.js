@@ -21,7 +21,7 @@ const PostItem = ({post})=>{
             <ul className="list-inline overImage">
                 <li className="list-inline-item me-3">
                     {
-                    post.tags && post.tags.map( (tag, i) => {return <Badge color="primary" key={`tag-${i}`}>{tag.name}</Badge> } )
+                    post.tags && post.tags.map( (tag, i) => {return <Badge color="primary" className="ml-1" key={`tag-${i}`}>{tag.name}</Badge> } )
                     }
                 </li>
             </ul>
