@@ -4,12 +4,13 @@ import Link             from "next/link"
 import {Label, Badge}   from "reactstrap"
 
 const PostItem = ({post})=>{
+    const data = new Intl.DateTimeFormat('pt', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(post.published_at))
     return(
         <>
         <div className="title">
             <div>
             <h4 className="bold mb-0 text-truncate"><Link  href={`/${post.slug}`}>{post.title}</Link></h4>
-            <Label className="text-muted">{post.dateFormatted}</Label>
+                <Label className="text-muted">{data}</Label>
             </div>
         </div>
         <div className="position-relative mb-3">

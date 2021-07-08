@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps, router }) {
         <motion.div key={router.route} exit="pageExit"  initial="pageInitial" animate="pageAnimate" variants={{
             pageInitial:{
                 opacity: 0.3,
-                y: -120
+                y: 30
                 
             },
             pageAnimate: {
@@ -21,8 +21,8 @@ function MyApp({ Component, pageProps, router }) {
             },
             exit: {
                 opacity: 0.2,
-                transition: {duration: .5},
-                y: -120
+                transition: {duration: 1.5},
+                y: 30
     
             }
         }}>

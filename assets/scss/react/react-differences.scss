@@ -15,6 +15,10 @@
 // example pages and sections
 @import "now-ui-kit/sections";
 
+
+.title{
+    padding-top: 0;
+}
 .bg-left{
     background-image: url(/assets/img/bg-left.png);
     background-size: 220px;
@@ -81,6 +85,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 2; /* number of lines to show */
     -webkit-box-orient: vertical;
+    height: 54px;
  }
 
  .post{

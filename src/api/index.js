@@ -17,16 +17,7 @@ const api = new GhostContentAPI({
         console.error(err);
       });
 
-      const configPosts = posts.map(post => {
-        const options = {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        };
-      
-        post.dateFormatted = new Intl.DateTimeFormat('pt-BR', options)
-          .format(new Date(post.published_at));
-      });
+  
       return posts
   }
 

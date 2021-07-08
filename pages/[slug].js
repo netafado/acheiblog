@@ -23,6 +23,9 @@ function Single(props) {
           <meta property="og:title"         content={post.og_title  || post.title} />
           <meta property="og:description"   content={post.og_description || post.description} />
           <meta property="og:image"         content={post.og_image || post.feature_image} />
+          <meta name="description" content={post.description}/>
+
+          <title>{post.title}</title> 
         </Head>
         <LoadingPage loading={false}/>
         <BannerTopo post={props.post}/>
@@ -40,7 +43,6 @@ function Single(props) {
               </CardBody>
               </Card>
             </Col>
-
           </Row>
         </Container>
       </Layout>

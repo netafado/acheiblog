@@ -21,6 +21,7 @@ function Index({posts}) {
                   <Row>
                       {
                         posts.map( (post)=>{
+                            console.log(post)
                             return(
                               <Col sm="6" md="4" lg="6"  key={post.id} className="post" >
                                 <PostItem post={post} />
