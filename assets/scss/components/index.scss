@@ -1,0 +1,36 @@
+.bg-left{
+    background-image: url(/assets/img/bg-left.png);
+    background-size: 220px;
+    background-position: left top;
+    background-repeat: no-repeat;
+    @media screen and (max-width: 480px) {
+        background-size: 145px;
+    }
+}
+
+.authorImage{
+    border: 2px solid rgba($color: white, $alpha: .3);
+}
+
+.position-relative.mb-3{
+    min-height: 240px;
+    overflow: hidden;
+}
+
+.imageBgContainer{
+    position: relative;
+    padding-bottom: 53%;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.imageBg{
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+
+}

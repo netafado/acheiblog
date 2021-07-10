@@ -7,8 +7,10 @@ import {getPosts}   from "../src/api"
 import { Col, Row, Container, Card, CardBody } from "reactstrap";
 import PostItem from "../src/components/post/postList"
 
+
 function Index({posts}) {
   const [loading, setLoading] = React.useState(false)
+  console.log(posts)
   return (
       <Layout >
         <LoadingPage loading={loading}/>
@@ -21,7 +23,6 @@ function Index({posts}) {
                   <Row>
                       {
                         posts.map( (post)=>{
-                            console.log(post)
                             return(
                               <Col sm="6" md="4" lg="6"  key={post.id} className="post" >
                                 <PostItem post={post} />

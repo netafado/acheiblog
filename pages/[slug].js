@@ -9,7 +9,6 @@ import  Link from "next/link"
 import Head from "next/head"
 function Single(props) {
   const {post} = props
-  console.log(post)
   React.useEffect(() => {
     prepararTela();
 
@@ -65,7 +64,6 @@ export async function getStaticProps(context) {
       notFound: true,
     }
   }
-
   return {
     props: { post },
     revalidate: 40

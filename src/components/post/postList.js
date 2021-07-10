@@ -2,7 +2,7 @@ import Author           from "../author"
 import Image            from "next/image"
 import Link             from "next/link"
 import {Label, Badge}   from "reactstrap"
-
+import Labels           from "./labels"
 const PostItem = ({post})=>{
     const data = new Intl.DateTimeFormat('pt', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(post.published_at))
     return(
@@ -13,31 +13,30 @@ const PostItem = ({post})=>{
                 <Label className="text-muted">{data}</Label>
             </div>
         </div>
-        <div className="position-relative mb-3">
+        <div className="position-relative mb-3 imageBgContainer">
             <div className="bg-image"></div>
+            <div className="imageBg" style={{backgroundImage: `url(${post.feature_image})`}}></div>
             {
-                post.feature_image &&  <img src={post.feature_image}  alt="" width="1353" height="822" className="img-thumbnail"  layout='responsive' />
+                post.feature_image &&  
+                <div className="w-100 position-relative">
+
+                </div>
             }
-            <ul className="list-inline overImage">
-                <li className="list-inline-item me-3">
-                    {
-                    post.tags && post.tags.map( (tag, i) => {return <Badge color="primary" className="ml-1" key={`tag-${i}`}>{tag.name}</Badge> } )
-                    }
-                </li>
-            </ul>
             <div className="author-wrapper">
-                {
-                post.authors.map( author =>{
-                    return(
-                        <Author key={author.id} author={author}/>
-                    )
-                } )
-                }
+                    {
+                    post.authors.map( author =>{
+                        return(
+                            <Author key={author.id} author={author}/>
+                        )
+                    } )
+                    }
             </div>
+            <Labels tags={post.tags}/>
+
 
         </div>
 
-        <p className="post-text">{post.custom_excerpt}</p>
+        <p className="post-text text-black-50">{post.custom_excerpt}</p>
         <div>
             <Link href={`/${post.slug}`}>
             <a className="btn btn-round text-center btn-primary">Saiba mais <i className="mdi mdi-arrow-right" /></a>
