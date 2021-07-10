@@ -2,22 +2,22 @@ import React        from "react";
 import Layout       from "../src/components/layout"
 import BannerTopo   from "../src/components/banner"
 import LoadingPage  from "../src/components/loader/page"
-import {getPosts}   from "../src/api"
+import {getPosts, getTags}   from "../src/api"
 
 import { Col, Row, Container, Card, CardBody } from "reactstrap";
 import PostItem from "../src/components/post/postList"
+import Categoria from "../src/components/post/categorias"
 
-
-function Index({posts}) {
+function Index({ posts, categorias }) {
   const [loading, setLoading] = React.useState(false)
-  console.log(posts)
+  console.log(categorias)
   return (
       <Layout >
         <LoadingPage loading={loading}/>
         <BannerTopo />
         <Container fluid style={{marginTop: -70}}>
           <Row className="justify-content-center">
-            <Col lg="9">
+            <Col lg="6">
               <Card className="card pd-2">
                 <CardBody>
                   <Row>
@@ -34,6 +34,26 @@ function Index({posts}) {
                 </CardBody>
               </Card>
             </Col>
+            <Col lg="3">
+            <Card className="card pd-2">
+                <CardBody>
+                <h4 className="bold mb-0 text-truncate mt-0">Categorias</h4>
+
+                  <Row>
+                  {
+                        categorias.map( (post)=>{
+                            return(
+                              <Col sm="12"  key={post.id} className="post" >
+                                <Categoria tag={post} />
+                              </Col>
+                            )
+                        }) 
+                      }
+
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
           </Row>
       </Container>
       </Layout>
@@ -43,8 +63,9 @@ function Index({posts}) {
 
 export async function getStaticProps() {
   const posts = await getPosts();
+  const categorias = await getTags()
   return {
-    props: { posts },
+    props: { posts, categorias },
     revalidate: 30
   }
 }

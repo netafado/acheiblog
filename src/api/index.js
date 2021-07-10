@@ -43,7 +43,8 @@ export async function getTag(slug) {
 export async function getTags() {
   const tags = await api.tags
   .browse({
-    limit: "all"
+    limit: "all",
+    include: 'count.posts,posts'
   })
   .catch(err => {
     console.error(err);
