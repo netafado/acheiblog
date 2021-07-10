@@ -3,20 +3,16 @@ import Layout from "../../src/components/layout"
 import {prepararTela} from "../../uteis/index"
 import LoadingPage from "../../src/components/loader/page"
 import {getTag, getTags, getPostsByTag} from "../../src/api"
-import { Card, CardBody, Container, Row, Col, Breadcrumb, BreadcrumbItem } from "reactstrap"
-import  Link from "next/link"
-import Head from "next/head"
-import Banner from "../../src/components/banner/categoria"
+import {  Row, Col, Breadcrumb } from "reactstrap"
+import Head     from "next/head"
+import Banner   from "../../src/components/banner/categoria"
 import Metatags from "../../src/components/metatags";
 import PostItem from "../../src/components/post/postList";
-import Content from "../../src/components/layout/content";
+import Content  from "../../src/components/layout/content";
 function Single(props) {
   const {tag, posts} = props
-  console.log(tag.slug, posts)
   React.useEffect(() => {
     prepararTela();
-
-
   }, []);
   return (
       <Layout >
@@ -31,7 +27,8 @@ function Single(props) {
             <Breadcrumb>
               <p>{tag.description}</p>
             </Breadcrumb>
-              <Row>
+
+                <Row>
                   {
                     posts.map( (post)=>{
                         return(

@@ -87,6 +87,13 @@ function IndexNavbar() {
 
             </Nav>
             <Nav navbar >
+            <NavItem className="d-flex justify-content-center align-items-center">
+              <div className="text-center">
+                  <a target="_blank" rel='noreferrer noopener' href="https://www.facebook.com/Achei-Fornecedor-113737716707790/" className="btn btn-primary btn-icon btn-nav btn-sm btn-round"><i className="fab fa-facebook-square" /></a>
+                  <a target="_blank" rel='noreferrer noopener' href="https://www.linkedin.com/company/acheifornecedor/" className="btn btn-primary btn-icon btn-nav btn-sm btn-round"><i className="fab fa-linkedin-in" /></a>
+                  <a target="_blank" rel='noreferrer noopener' href="https://www.instagram.com/acheifornecedor/?igshid=bpakap0k1iae" className="btn btn-primary btn-icon btn-nav btn-sm btn-round"><i className="fab fa-instagram" /></a>
+              </div>
+            </NavItem>
             <NavItem>
                 <a
                   className="btn nav-link btn-neutral btn-round text-center text-primary"
@@ -96,7 +103,7 @@ function IndexNavbar() {
                   Conheça
                 </a>
               </NavItem>
-              <NavItem>
+              <NavItem >
                     <a 
                     href="https://www.acheifornecedor.com/cadastro"
                     target="_blank"
