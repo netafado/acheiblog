@@ -9,12 +9,12 @@ function DarkFooter() {
       <Container>
         <Row>
           <Col className="align-self-center text-center">
-            <img className="m-auto" src={"/assets/img/logo@2x.png"} width={120} height={58} />
+            <img className="m-auto" src={"/assets/img/logo@2x.png"} width={120} height={58} alt="imagem logo" />
           </Col>
         </Row>
         <Row className="justify-content-center mt-2 mb-2">
             <a target="_blank" rel='noreferrer noopener' href="https://www.facebook.com/Achei-Fornecedor-113737716707790/"><img width={25} height={25} src={"/assets/img/facebook.svg"} className="m-1" alt="Facebook" /></a>
-            <a target="_blank" rel='noreferrer noopener' href="https://www.linkedin.com/company/acheifornecedor"><img width={25} height={25} src={"/assets/img/linkdin.svg"} className="m-1"  alt="Linkdin" /></a>
+            <a target="_blank" rel='noreferrer noopener' href="https://www.linkedin.com/company/acheifornecedor"><img width={25} height={25} src={"/assets/img/linkdin.svg"} className="m-1"  alt="Linkdin"   /></a>
             <a target="_blank" rel='noreferrer noopener' href="https://www.instagram.com/acheifornecedor/?igshid=bpakap0k1iae"><img width={25} height={25} src={"/assets/img/instagram.svg"} className="m-1" alt="Instagram" /></a>
         </Row>
         <Row>
