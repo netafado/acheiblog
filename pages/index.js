@@ -10,7 +10,6 @@ import Categoria from "../src/components/post/categorias"
 
 function Index({ posts, categorias }) {
   const [loading, setLoading] = React.useState(false)
-  console.log(categorias)
   return (
       <Layout >
         <LoadingPage loading={loading}/>
@@ -63,7 +62,7 @@ function Index({ posts, categorias }) {
 
 export async function getStaticProps() {
   const posts = await getPosts();
-  const categorias = await getTags()
+  const categorias = await getTags();
   return {
     props: { posts, categorias },
     revalidate: 30
