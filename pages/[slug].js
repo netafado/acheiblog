@@ -11,8 +11,6 @@ function Single(props) {
   const {post} = props
   React.useEffect(() => {
     prepararTela();
-
-
   }, []);
   return (
       <Layout >
