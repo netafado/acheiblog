@@ -64,3 +64,9 @@ export async function getSinglePost(postSlug) {
       console.error(err);
     });
 }
+
+export async function getSettings(){
+  const settings = await api.settings.browse();
+  return settings
+
+}

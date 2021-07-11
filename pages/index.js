@@ -2,16 +2,18 @@ import React        from "react";
 import Layout       from "../src/components/layout"
 import BannerTopo   from "../src/components/banner"
 import LoadingPage  from "../src/components/loader/page"
-import {getPosts, getTags}   from "../src/api"
+import {getPosts, getTags, getSettings}   from "../src/api"
 
 import { Col, Row, Container, Card, CardBody } from "reactstrap";
 import PostItem from "../src/components/post/postList"
 import Categoria from "../src/components/post/categorias"
-
-function Index({ posts, categorias }) {
+import Metatags from "../src/components/metatags"
+function Index({ posts, categorias, settings }) {
   const [loading, setLoading] = React.useState(false)
+  console.log(settings)
   return (
       <Layout >
+        <Metatags title={settings.title} og_image={settings.og_image} description={settings.description} og_description={settings.description} />
         <LoadingPage loading={loading}/>
         <BannerTopo />
         <Container fluid style={{marginTop: -70}}>
@@ -63,8 +65,9 @@ function Index({ posts, categorias }) {
 export async function getStaticProps() {
   const posts = await getPosts();
   const categorias = await getTags();
+  const settings = await getSettings()
   return {
-    props: { posts, categorias },
+    props: { posts, categorias, settings },
     revalidate: 30
   }
 }
