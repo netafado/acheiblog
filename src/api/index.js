@@ -2,8 +2,8 @@ import GhostContentAPI from "@tryghost/content-api";
 
 
 const api = new GhostContentAPI({
-    url: 'https://apiblogachei.isaiasfrancisco.com.br',
-    key: '4dc0203836ea8f0fa042742e51',
+    url: 'https://blogadmin.acheifornecedor.com',
+    key: '1962d97db06766c9a862d61f9a',
     version: "v3"
   });
 
