@@ -7,6 +7,7 @@ import {getSinglePost, getPosts} from "../src/api"
 import { Card, CardBody, Container, Row, Col, Breadcrumb, BreadcrumbItem } from "reactstrap"
 import  Link from "next/link"
 import Head from "next/head"
+import "../amplifyconfig"
 function Single(props) {
   const {post} = props
   React.useEffect(() => {
@@ -64,7 +65,7 @@ export async function getStaticProps(context) {
   }
   return {
     props: { post },
-    revalidate: 40
+    revalidate: 10
   }
 }
 

@@ -8,9 +8,10 @@ import { Col, Row, Container, Card, CardBody } from "reactstrap";
 import PostItem from "../src/components/post/postList"
 import Categoria from "../src/components/post/categorias"
 import Metatags from "../src/components/metatags"
+import "../amplifyconfig"
 function Index({ posts, categorias, settings }) {
   const [loading, setLoading] = React.useState(false)
-  console.log(settings)
+  console.log(settings, posts)
   return (
       <Layout >
         <Metatags title={settings.title} og_image={settings.og_image} description={settings.description} og_description={settings.description} />
@@ -68,7 +69,7 @@ export async function getStaticProps() {
   const settings = await getSettings()
   return {
     props: { posts, categorias, settings },
-    revalidate: 30
+    revalidate: 10
   }
 }
 

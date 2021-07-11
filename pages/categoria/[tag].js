@@ -9,6 +9,8 @@ import Banner   from "../../src/components/banner/categoria"
 import Metatags from "../../src/components/metatags";
 import PostItem from "../../src/components/post/postList";
 import Content  from "../../src/components/layout/content";
+import "../../amplifyconfig"
+
 function Single(props) {
   const {tag, posts} = props
   React.useEffect(() => {
