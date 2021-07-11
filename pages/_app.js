@@ -5,6 +5,7 @@ import "/assets/demo/demo.css?v=1.4.0";
 import "/assets/demo/nucleo-icons-page-styles.css?v=1.4.0";
 import { motion, AnimatePresence } from 'framer-motion';
 import config from '../src/aws-exports';
+import Amplify from "aws-amplify";
 Amplify.configure({
   ...config, ssr: true
 });
