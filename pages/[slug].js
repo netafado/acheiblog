@@ -17,7 +17,7 @@ function Single(props) {
   return (
       <Layout >
         <Head>
-          <meta property="og:url"           content={ `https://main.d2jykcq4voqie4.amplifyapp.com/${post.slug}` }/>
+          <meta property="og:url"           content={ `https://blog.acheifornecedor.com/${post.slug}` }/>
           <meta property="og:type"          content="company" />
           <meta property="og:title"         content={post.og_title  || post.title} />
           <meta property="og:description"   content={post.og_description || post.description} />
