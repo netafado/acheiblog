@@ -22,7 +22,6 @@ function Single(props) {
           <meta property="og:description"   content={post.og_description || post.description} />
           <meta property="og:image"         content={post.og_image || post.feature_image} />
           <meta name="description" content={post.description}/>
-
           <title>{post.title}</title> 
         </Head>
         <LoadingPage loading={false}/>
@@ -51,13 +50,14 @@ export async function getStaticPaths() {
   const posts = await getPosts()
   const paths = posts.map((post) => ({
     params: { slug: post.slug },
+    fallback: true
+
   }))
   return { paths, fallback: false }
 }
 
 export async function getStaticProps(context) {
   const post = await getSinglePost(context.params.slug)
-
   if (!post) {
     return {
       notFound: true,

@@ -58,18 +58,18 @@ function Index({ posts, categorias, settings }) {
             </Col>
           </Row>
       </Container>
-      
       </Layout>
   );
 }
 
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const posts = await getPosts();
   const categorias = await getTags();
   const settings = await getSettings()
   return {
-    props: { posts, categorias, settings }
+    props: { posts, categorias, settings },
+    revalidate: 10
   }
 }
 
