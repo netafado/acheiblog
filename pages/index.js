@@ -58,6 +58,7 @@ function Index({ posts, categorias, settings }) {
             </Col>
           </Row>
       </Container>
+      
       </Layout>
   );
 }
