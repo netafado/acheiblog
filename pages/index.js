@@ -11,7 +11,7 @@ import Metatags from "../src/components/metatags"
 import "../amplifyconfig"
 function Index({ posts, categorias, settings }) {
   const [loading, setLoading] = React.useState(false)
-  console.log(settings, posts)
+
   return (
       <Layout >
         <Metatags title={settings.title} og_image={settings.og_image} description={settings.description} og_description={settings.description} />
@@ -63,13 +63,12 @@ function Index({ posts, categorias, settings }) {
 }
 
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const posts = await getPosts();
   const categorias = await getTags();
   const settings = await getSettings()
   return {
-    props: { posts, categorias, settings },
-    revalidate: 10
+    props: { posts, categorias, settings }
   }
 }
 
