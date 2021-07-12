@@ -8,11 +8,18 @@ import { Card, CardBody, Container, Row, Col, Breadcrumb, BreadcrumbItem } from 
 import  Link from "next/link"
 import Head from "next/head"
 import "../amplifyconfig"
+import { useRouter } from 'next/router'
+
 function Single(props) {
   const {post} = props
+  const router = useRouter()
+
   React.useEffect(() => {
     prepararTela();
   }, []);
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
   return (
       <Layout >
         <Head>
@@ -49,11 +56,9 @@ function Single(props) {
 export async function getStaticPaths() {
   const posts = await getPosts()
   const paths = posts.map((post) => ({
-    params: { slug: post.slug },
-    fallback: true
-
+    params: { slug: post.slug }
   }))
-  return { paths, fallback: false }
+  return { paths, fallback: true }
 }
 
 export async function getStaticProps(context) {
@@ -65,7 +70,7 @@ export async function getStaticProps(context) {
   }
   return {
     props: { post },
-    revalidate: 10
+    revalidate: 1
   }
 }
 

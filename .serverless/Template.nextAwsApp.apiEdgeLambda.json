@@ -1,0 +1,17 @@
+{
+  "name": "ee35nqn-biq4zim",
+  "hash": "QnMGq/nkPyLLjx0GHDm+jrqHMzIyaRhKqzZArtUGVjU=",
+  "description": "API Lambda@Edge for Next CloudFront distribution",
+  "memory": 512,
+  "timeout": 10,
+  "code": "/Users/netafado/gitHub/acheiblog/.serverless_nextjs/api-lambda",
+  "shims": [],
+  "handler": "index.handler",
+  "runtime": "nodejs12.x",
+  "env": {},
+  "role": {
+    "arn": "arn:aws:iam::669711408208:role/ee35nqn-7c7m8o"
+  },
+  "arn": "arn:aws:lambda:us-east-1:669711408208:function:ee35nqn-biq4zim",
+  "region": "us-east-1"
+}

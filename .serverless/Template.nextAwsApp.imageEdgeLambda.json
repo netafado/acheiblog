@@ -1,0 +1,17 @@
+{
+  "name": "ee35nqn-gd6f9p",
+  "hash": "xU1Di+InpPVlYq+Xkyp3NbYXvXINdZW7F02u3XeK6jM=",
+  "description": "Image Lambda@Edge for Next CloudFront distribution",
+  "memory": 512,
+  "timeout": 10,
+  "code": "/Users/netafado/gitHub/acheiblog/.serverless_nextjs/image-lambda",
+  "shims": [],
+  "handler": "index.handler",
+  "runtime": "nodejs12.x",
+  "env": {},
+  "role": {
+    "arn": "arn:aws:iam::669711408208:role/ee35nqn-y3skpuo"
+  },
+  "arn": "arn:aws:lambda:us-east-1:669711408208:function:ee35nqn-gd6f9p",
+  "region": "us-east-1"
+}

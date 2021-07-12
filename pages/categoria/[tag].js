@@ -10,12 +10,16 @@ import Metatags from "../../src/components/metatags";
 import PostItem from "../../src/components/post/postList";
 import Content  from "../../src/components/layout/content";
 import "../../amplifyconfig"
-
+import { useRouter } from 'next/router'
 function Single(props) {
   const {tag, posts} = props
+  const router = useRouter()
+
   React.useEffect(() => {
     prepararTela();
   }, []);
+  if (router.isFallback) {
+    return <div>Loading...</div>
   return (
       <Layout >
         <Head>
@@ -51,7 +55,7 @@ export async function getStaticPaths() {
   const paths = result.map((post) => ({
     params: { tag: post.slug },
   }))
-  return { paths, fallback: false }
+  return { paths, fallback: true }
 }
 
 export async function getStaticProps(context) {
@@ -64,7 +68,7 @@ export async function getStaticProps(context) {
   }
   return {
     props: { tag, posts },
-    revalidate: 40
+    revalidate: 1
   }
 }
 

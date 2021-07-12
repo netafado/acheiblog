@@ -1,0 +1,17 @@
+{
+  "name": "ee35nqn-ibwq3zj",
+  "hash": "NkrJTqoPmPObShSLmbggduFEc0bp3yDWOlzu+nzh4d0=",
+  "description": "Next.js Regeneration Lambda",
+  "memory": 512,
+  "timeout": 10,
+  "code": "/Users/netafado/gitHub/acheiblog/.serverless_nextjs/regeneration-lambda",
+  "shims": [],
+  "handler": "index.handler",
+  "runtime": "nodejs12.x",
+  "env": {},
+  "role": {
+    "arn": "arn:aws:iam::669711408208:role/ee35nqn-s90acmk"
+  },
+  "arn": "arn:aws:lambda:us-east-1:669711408208:function:ee35nqn-ibwq3zj",
+  "region": "us-east-1"
+}
