@@ -1,0 +1,13 @@
+{
+  "region": "us-east-1",
+  "privateZone": false,
+  "domain": "acheifornecedor.com",
+  "subdomains": [
+    {
+      "domain": "blog.acheifornecedor.com",
+      "distributionId": "E1J6E3HM7G2RF3",
+      "url": "https://d1lfgghylq63uc.cloudfront.net",
+      "type": "awsCloudFront"
+    }
+  ]
+}

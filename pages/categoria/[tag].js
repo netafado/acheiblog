@@ -18,8 +18,11 @@ function Single(props) {
   React.useEffect(() => {
     prepararTela();
   }, []);
+
   if (router.isFallback) {
     return <div>Loading...</div>
+  }
+  
   return (
       <Layout >
         <Head>
