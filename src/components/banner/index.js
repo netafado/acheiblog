@@ -30,8 +30,6 @@ const postVariants = {
 
 function IndexHeader() {
   const container = useRef(null)
-  console.log("index")
-
   useEffect(()=>{
       lottie.loadAnimation({
         container: container.current,

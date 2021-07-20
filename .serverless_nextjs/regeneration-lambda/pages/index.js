@@ -85,7 +85,6 @@ const postVariants = {
 
 function IndexHeader() {
   const container = (0,react.useRef)(null);
-  console.log("index");
   (0,react.useEffect)(() => {
     lottie_default().loadAnimation({
       container: container.current,
@@ -343,7 +342,7 @@ async function getStaticProps() {
 
 /***/ }),
 
-/***/ 10541:
+/***/ 75133:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -436,11 +435,11 @@ __webpack_require__.r(__webpack_exports__);
         rewrites: combinedRewrites,
         i18n: undefined,
         page: "/",
-        buildId: "4KmMsXJ4qYSx6JK_NeBbt",
-        escapedBuildId: "4KmMsXJ4qYSx6JK_NeBbt",
+        buildId: "j7sl5xJ9JlGwPLjg9n0Z8",
+        escapedBuildId: "j7sl5xJ9JlGwPLjg9n0Z8",
         basePath: "",
         pageIsDynamic: false,
-        encodedPreviewProps: {previewModeId:"9b71809ad70cabf354f8bf6df4b3bf65",previewModeSigningKey:"687118bf502c0ff3f1e1aa6dcff79eb6881996a0c43a034ffc1060e944152343",previewModeEncryptionKey:"eaae4f1e697c9e935f134f7a509d7ba7628bce529d549c1a438f5a5a4df18287"}
+        encodedPreviewProps: {previewModeId:"81e1b8b9ea52bb749b78a79c35a01296",previewModeSigningKey:"986ee764721b06c54f3eb7a874e0b7ef3b46a616f658d5fe2ed066f8fda0ed85",previewModeEncryptionKey:"b755b751bc649000a950a432edb53b3d44c4171092875e540bbabd524a2520a0"}
       })
       
     
@@ -636,7 +635,7 @@ module.exports = require("zlib");;
 /******/ 	__webpack_require__.x = function() {
 /******/ 		// Load entry module and return exports
 /******/ 		// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,911,959,675,266,428,82,634,567], function() { return __webpack_require__(10541); })
+/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,911,959,675,266,428,82,634,567], function() { return __webpack_require__(75133); })
 /******/ 		__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 		return __webpack_exports__;
 /******/ 	};

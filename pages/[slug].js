@@ -13,7 +13,7 @@ import { useRouter } from 'next/router'
 function Single(props) {
   const {post} = props
   const router = useRouter()
-
+  console.log(post)
   React.useEffect(() => {
     prepararTela();
   }, []);

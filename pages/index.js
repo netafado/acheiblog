@@ -69,7 +69,7 @@ export async function getStaticProps() {
   const settings = await getSettings()
   return {
     props: { posts, categorias, settings },
-    revalidate: 10
+    revalidate: 5
   }
 }
 
