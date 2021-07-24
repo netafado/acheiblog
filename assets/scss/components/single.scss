@@ -1022,8 +1022,8 @@ except for when immediately preceeded by a heading */
 /* This keeps small iamges centered */
 .kg-image-card img {
     margin: auto;
-    width: 100%;
     height: auto;
+    max-width: 100%;
 }
 
 
