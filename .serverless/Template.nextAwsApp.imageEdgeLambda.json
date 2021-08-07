@@ -1,6 +1,6 @@
 {
   "name": "ee35nqn-gd6f9p",
-  "hash": "zmRbraMczhVVfkxARK/+TPU1lL1gmwoSrFJz8XdZ/Os=",
+  "hash": "M+CUHvVN0IoGAXLu7Ws8E+UG0gagxWICu8wiIB82HQ0=",
   "description": "Image Lambda@Edge for Next CloudFront distribution",
   "memory": 512,
   "timeout": 10,
