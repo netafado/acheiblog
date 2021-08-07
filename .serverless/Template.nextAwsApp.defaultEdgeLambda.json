@@ -1,13 +1,13 @@
 {
   "name": "ee35nqn-31amho",
-  "hash": "LLwfRzvFG7reAnLJ/gJmFREpRZ8AqAwKmT9jpVE+rFk=",
+  "hash": "0grfcTHf5Th+1MrI5ggEdHOjw2npDPvJ7b7vO7AiBFc=",
   "description": "Default Lambda@Edge for Next CloudFront distribution",
   "memory": 512,
   "timeout": 10,
   "code": "/Users/netafado/gitHub/acheiblog/.serverless_nextjs/default-lambda",
   "shims": [],
   "handler": "index.handler",
-  "runtime": "nodejs12.x",
+  "runtime": "nodejs14.x",
   "env": {},
   "role": {
     "arn": "arn:aws:iam::669711408208:role/ee35nqn-47v6fp"

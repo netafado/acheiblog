@@ -6,7 +6,7 @@ exports.modules = {
 /***/ (function(module) {
 
 "use strict";
-module.exports = JSON.parse('{"polyfillFiles":["static/chunks/polyfills-a54b4f32bdc1ef890ddd.js"],"devFiles":[],"ampDevFiles":[],"lowPriorityFiles":["static/ik7OopsZM2pDZgvlEYIQl/_buildManifest.js","static/ik7OopsZM2pDZgvlEYIQl/_ssgManifest.js"],"pages":{"/":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/ea88be26-9bcf6ead520f4ac26973.js","static/chunks/431-297f627e3fa21f9579c3.js","static/chunks/793-21f15bc59782df5c22ae.js","static/chunks/989-323848f16e305e8af3b5.js","static/chunks/pages/index-966a50b4dcc159d4b181.js"],"/[slug]":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/ea88be26-9bcf6ead520f4ac26973.js","static/chunks/431-297f627e3fa21f9579c3.js","static/chunks/989-323848f16e305e8af3b5.js","static/chunks/pages/[slug]-ee5d2d0015f4dfbf6c36.js"],"/_app":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/css/aa8bcd465c6e588410a5.css","static/chunks/pages/_app-5c6bee4062f92f50840e.js"],"/_error":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/pages/_error-a645ed192c1849e450eb.js"],"/categoria/[tag]":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/ea88be26-9bcf6ead520f4ac26973.js","static/chunks/431-297f627e3fa21f9579c3.js","static/chunks/793-21f15bc59782df5c22ae.js","static/chunks/989-323848f16e305e8af3b5.js","static/chunks/pages/categoria/[tag]-70c4f656ea83218938ea.js"]},"ampFirstPages":[]}');
+module.exports = JSON.parse('{"polyfillFiles":["static/chunks/polyfills-a54b4f32bdc1ef890ddd.js"],"devFiles":[],"ampDevFiles":[],"lowPriorityFiles":["static/989WI79iw2mbkHtbjLXpI/_buildManifest.js","static/989WI79iw2mbkHtbjLXpI/_ssgManifest.js"],"pages":{"/":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/ea88be26-9bcf6ead520f4ac26973.js","static/chunks/911-a80d2c2d256b58aeb49f.js","static/chunks/793-21f15bc59782df5c22ae.js","static/chunks/989-71c32cddff477f07228b.js","static/chunks/pages/index-0e9c45dbcc0b3a8941fc.js"],"/[slug]":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/ea88be26-9bcf6ead520f4ac26973.js","static/chunks/911-a80d2c2d256b58aeb49f.js","static/chunks/989-71c32cddff477f07228b.js","static/chunks/pages/[slug]-65ac36d27c93e8164350.js"],"/_app":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/css/aa8bcd465c6e588410a5.css","static/chunks/pages/_app-f4fb16d9ad54d149851e.js"],"/_error":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/pages/_error-82a806cd39f8ab3dc3ac.js"],"/categoria/[tag]":["static/chunks/webpack-9fc9ab40a062a7008df3.js","static/chunks/framework-2191d16384373197bc0a.js","static/chunks/main-588261c74baf7142d208.js","static/chunks/ea88be26-9bcf6ead520f4ac26973.js","static/chunks/911-a80d2c2d256b58aeb49f.js","static/chunks/793-21f15bc59782df5c22ae.js","static/chunks/989-71c32cddff477f07228b.js","static/chunks/pages/categoria/[tag]-d3f13c3f0c3dcc6e1159.js"]},"ampFirstPages":[]}');
 
 /***/ }),
 
@@ -25,11 +25,12 @@ module.exports = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(85893);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(67294);
-/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(53869);
-/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(35414);
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(53869);
+/* harmony import */ var framer_motion__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(35414);
 /* harmony import */ var _src_aws_exports__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(82181);
-/* harmony import */ var aws_amplify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(31650);
-/* harmony import */ var aws_amplify__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(aws_amplify__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var aws_amplify__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(31650);
+/* harmony import */ var aws_amplify__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(aws_amplify__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9008);
 
 
 
@@ -47,7 +48,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-aws_amplify__WEBPACK_IMPORTED_MODULE_3___default().configure(_objectSpread(_objectSpread({}, _src_aws_exports__WEBPACK_IMPORTED_MODULE_2__/* .default */ .Z), {}, {
+
+aws_amplify__WEBPACK_IMPORTED_MODULE_4___default().configure(_objectSpread(_objectSpread({}, _src_aws_exports__WEBPACK_IMPORTED_MODULE_2__/* .default */ .Z), {}, {
   ssr: true
 }));
 
@@ -56,9 +58,9 @@ function MyApp({
   pageProps,
   router
 }) {
-  return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_4__/* .AnimatePresence */ .M, {
+  return /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_5__/* .AnimatePresence */ .M, {
     exitBeforeEnter: true,
-    children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_5__/* .motion.div */ .E.div, {
+    children: /*#__PURE__*/react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(framer_motion__WEBPACK_IMPORTED_MODULE_6__/* .motion.div */ .E.div, {
       exit: "pageExit",
       initial: "pageInitial",
       animate: "pageAnimate",

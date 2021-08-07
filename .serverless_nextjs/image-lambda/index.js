@@ -4,7 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 require('./manifest.json');
 require('./routes-manifest.json');
-var imageHandler = require('./image-handler-2dc1bb08.js');
+var imageHandler = require('./image-handler-8fd1a607.js');
 require('url');
 require('http');
 require('stream');

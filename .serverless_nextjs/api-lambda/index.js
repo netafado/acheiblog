@@ -106,9 +106,9 @@ const HttpStatusCodes = {
 
 const toCloudFrontHeaders = (headers, headerNames, originalHeaders) => {
   const result = {};
-  const lowerCaseOriginalHeaders = {};
-  Object.entries(originalHeaders).forEach(([header, value]) => {
-    lowerCaseOriginalHeaders[header.toLowerCase()] = value;
+
+  Object.entries(originalHeaders).forEach(([headerName, headerValue]) => {
+    result[headerName.toLowerCase()] = headerValue;
   });
 
   Object.entries(headers).forEach(([headerName, headerValue]) => {
@@ -116,9 +116,6 @@ const toCloudFrontHeaders = (headers, headerNames, originalHeaders) => {
     headerName = headerNames[headerKey] || headerName;
 
     if (readOnlyCloudFrontHeaders[headerKey]) {
-      if (lowerCaseOriginalHeaders[headerKey]) {
-        result[headerKey] = lowerCaseOriginalHeaders[headerKey];
-      }
       return;
     }
 
@@ -231,6 +228,7 @@ const handler$1 = (
   const headerNames = {};
   res.writeHead = (status, headers) => {
     response.status = status;
+    response.statusDescription = HttpStatusCodes[status];
 
     if (headers) {
       res.headers = Object.assign(res.headers, headers);
@@ -823,6 +821,20 @@ function dropLocaleFromPath(path, routesManifest) {
     }
     return path;
 }
+function getLocalePrefixFromUri(uri, routesManifest) {
+    if (routesManifest.basePath && uri.startsWith(routesManifest.basePath)) {
+        uri = uri.slice(routesManifest.basePath.length);
+    }
+    if (routesManifest.i18n) {
+        for (const locale of routesManifest.i18n.locales) {
+            if (uri === `/${locale}` || uri.startsWith(`/${locale}/`)) {
+                return `/${locale}`;
+            }
+        }
+        return `/${routesManifest.i18n.defaultLocale}`;
+    }
+    return "";
+}
 
 /**
  Provides matching capabilities to support custom redirects, rewrites, and headers.
@@ -877,6 +889,14 @@ const matchDynamic = (uri, routes) => {
         const re = new RegExp(regex, "i");
         if (re.test(uri)) {
             return file;
+        }
+    }
+};
+const matchDynamicRoute = (uri, routes) => {
+    for (const { route, regex } of routes) {
+        const re = new RegExp(regex, "i");
+        if (re.test(uri)) {
+            return route;
         }
     }
 };
@@ -975,12 +995,127 @@ const normalise = (uri, routesManifest) => {
     return uri === "" ? "/" : uri;
 };
 
+const staticNotFound = (uri, manifest, routesManifest) => {
+    const localePrefix = getLocalePrefixFromUri(uri, routesManifest);
+    const notFoundUri = `${localePrefix}/404`;
+    const static404 = manifest.pages.html.nonDynamic[notFoundUri] ||
+        manifest.pages.ssg.nonDynamic[notFoundUri];
+    if (static404) {
+        return {
+            isData: false,
+            isStatic: true,
+            file: `pages${notFoundUri}.html`,
+            statusCode: 404
+        };
+    }
+};
+const notFoundPage = (uri, manifest, routesManifest) => {
+    return (staticNotFound(uri, manifest, routesManifest) || {
+        isData: false,
+        isRender: true,
+        page: "pages/_error.js",
+        statusCode: 404
+    });
+};
+
+const pageHtml = (localeUri) => {
+    if (localeUri == "/") {
+        return "pages/index.html";
+    }
+    return `pages${localeUri}.html`;
+};
+const handlePageReq = (uri, manifest, routesManifest, isPreview, isRewrite) => {
+    var _a, _b;
+    const { pages } = manifest;
+    const localeUri = normalise(addDefaultLocaleToPath(uri, routesManifest), routesManifest);
+    if (pages.html.nonDynamic[localeUri]) {
+        const nonLocaleUri = dropLocaleFromPath(localeUri, routesManifest);
+        const statusCode = nonLocaleUri === "/404" ? 404 : nonLocaleUri === "/500" ? 500 : undefined;
+        return {
+            isData: false,
+            isStatic: true,
+            file: pages.html.nonDynamic[localeUri],
+            statusCode
+        };
+    }
+    if (pages.ssg.nonDynamic[localeUri] && !isPreview) {
+        const ssg = pages.ssg.nonDynamic[localeUri];
+        const route = (_a = ssg.srcRoute) !== null && _a !== void 0 ? _a : localeUri;
+        const nonLocaleUri = dropLocaleFromPath(localeUri, routesManifest);
+        const statusCode = nonLocaleUri === "/404" ? 404 : nonLocaleUri === "/500" ? 500 : undefined;
+        return {
+            isData: false,
+            isStatic: true,
+            file: pageHtml(localeUri),
+            // page JS path is from SSR entries in manifest
+            page: pages.ssr.nonDynamic[route] || pages.ssr.dynamic[route],
+            revalidate: ssg.initialRevalidateSeconds,
+            statusCode
+        };
+    }
+    if (((_b = pages.ssg.notFound) !== null && _b !== void 0 ? _b : {})[localeUri] && !isPreview) {
+        return notFoundPage(uri, manifest, routesManifest);
+    }
+    if (pages.ssr.nonDynamic[localeUri]) {
+        return {
+            isData: false,
+            isRender: true,
+            page: pages.ssr.nonDynamic[localeUri]
+        };
+    }
+    const rewrite = !isRewrite && getRewritePath(uri, routesManifest, manifest);
+    if (rewrite) {
+        const [path, querystring] = rewrite.split("?");
+        if (isExternalRewrite(path)) {
+            return {
+                isExternal: true,
+                path,
+                querystring
+            };
+        }
+        const route = handlePageReq(path, manifest, routesManifest, isPreview, true);
+        return {
+            ...route,
+            querystring
+        };
+    }
+    const dynamic = matchDynamicRoute(localeUri, pages.dynamic);
+    const dynamicSSG = dynamic && pages.ssg.dynamic[dynamic];
+    if (dynamicSSG) {
+        return {
+            isData: false,
+            isStatic: true,
+            file: pageHtml(localeUri),
+            page: dynamic ? pages.ssr.dynamic[dynamic] : undefined,
+            fallback: dynamicSSG.fallback
+        };
+    }
+    const dynamicSSR = dynamic && pages.ssr.dynamic[dynamic];
+    if (dynamicSSR) {
+        return {
+            isData: false,
+            isRender: true,
+            page: dynamicSSR
+        };
+    }
+    const dynamicHTML = dynamic && pages.html.dynamic[dynamic];
+    if (dynamicHTML) {
+        return {
+            isData: false,
+            isStatic: true,
+            file: dynamicHTML
+        };
+    }
+    return notFoundPage(uri, manifest, routesManifest);
+};
+
 /**
  * Get the rewrite of the given path, if it exists.
- * @param path
+ * @param uri
+ * @param pageManifest
  * @param routesManifest
  */
-function getRewritePath(uri, routesManifest) {
+function getRewritePath(uri, routesManifest, pageManifest) {
     const path = addDefaultLocaleToPath(uri, routesManifest);
     const rewrites = routesManifest.rewrites;
     for (const rewrite of rewrites) {
@@ -992,6 +1127,13 @@ function getRewritePath(uri, routesManifest) {
         const destination = compileDestination(rewrite.destination, params);
         if (!destination) {
             return;
+        }
+        // No-op rewrite support for pages: skip to next rewrite if path does not map to existing non-dynamic and dynamic routes
+        if (pageManifest && path === destination) {
+            const url = handlePageReq(destination, pageManifest, routesManifest, false, true);
+            if (url.statusCode === 404) {
+                continue;
+            }
         }
         // Pass unused params to destination
         // except nextInternalLocale param since it's already in path prefix
@@ -1107,6 +1249,12 @@ function createRedirectResponse(uri, querystring, statusCode) {
             }
         ]
         : [];
+    const cacheControl = [
+        {
+            key: "Cache-Control",
+            value: "s-maxage=0"
+        }
+    ];
     return {
         isRedirect: true,
         status: status,
@@ -1118,7 +1266,8 @@ function createRedirectResponse(uri, querystring, statusCode) {
                     value: location
                 }
             ],
-            refresh: refresh
+            refresh: refresh,
+            "cache-control": cacheControl
         }
     };
 }

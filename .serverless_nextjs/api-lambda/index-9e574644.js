@@ -1648,4 +1648,4 @@ exports.FetchError = FetchError;
 exports.Headers = Headers;
 exports.Request = Request;
 exports.Response = Response;
-exports.default = fetch;
+exports['default'] = fetch;

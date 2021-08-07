@@ -18,7 +18,7 @@ function handler(req, res) {
 
 /***/ }),
 
-/***/ 86406:
+/***/ 13525:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -55,7 +55,7 @@ __webpack_require__.r(__webpack_exports__);
           page: "/api/hello",
           basePath: "",
           pageIsDynamic: false,
-          encodedPreviewProps: {previewModeId:"49386be86afe63d21bfe4e89b0d5cc6c",previewModeSigningKey:"e2bcafc706a7b341bff591fcac0c83daec4b0a7ed8151f0e1ba4642ca3486a7f",previewModeEncryptionKey:"1495e1bb4e2467fe61dea36116794cb6a08ebb72835503181c3a16101ad28ecd"}
+          encodedPreviewProps: {previewModeId:"a8fbc1427b74fe586535737172ee21f7",previewModeSigningKey:"97dfe7bce146b4cddcb73b4902a818f12ac2c31198f24811374b96395d931f1c",previewModeEncryptionKey:"6f23a783f8d5cd359ba748390b41d30beb638bffa1fadb59740a83905aee76aa"}
         })
         /* harmony default export */ __webpack_exports__["default"] = (apiHandler);
       
@@ -192,7 +192,7 @@ module.exports = require("zlib");;
 /******/ 	__webpack_require__.x = function() {
 /******/ 		// Load entry module and return exports
 /******/ 		// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,775,774,428], function() { return __webpack_require__(86406); })
+/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,339,428], function() { return __webpack_require__(13525); })
 /******/ 		__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 		return __webpack_exports__;
 /******/ 	};
@@ -345,8 +345,7 @@ module.exports = require("zlib");;
 /******/ 		var next = __webpack_require__.x;
 /******/ 		__webpack_require__.x = function() {
 /******/ 			__webpack_require__.e(920);
-/******/ 			__webpack_require__.e(775);
-/******/ 			__webpack_require__.e(774);
+/******/ 			__webpack_require__.e(339);
 /******/ 			__webpack_require__.e(428);
 /******/ 			return next();
 /******/ 		};

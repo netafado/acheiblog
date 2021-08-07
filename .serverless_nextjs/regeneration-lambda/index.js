@@ -104,9 +104,9 @@ const HttpStatusCodes = {
 
 const toCloudFrontHeaders = (headers, headerNames, originalHeaders) => {
   const result = {};
-  const lowerCaseOriginalHeaders = {};
-  Object.entries(originalHeaders).forEach(([header, value]) => {
-    lowerCaseOriginalHeaders[header.toLowerCase()] = value;
+
+  Object.entries(originalHeaders).forEach(([headerName, headerValue]) => {
+    result[headerName.toLowerCase()] = headerValue;
   });
 
   Object.entries(headers).forEach(([headerName, headerValue]) => {
@@ -114,9 +114,6 @@ const toCloudFrontHeaders = (headers, headerNames, originalHeaders) => {
     headerName = headerNames[headerKey] || headerName;
 
     if (readOnlyCloudFrontHeaders[headerKey]) {
-      if (lowerCaseOriginalHeaders[headerKey]) {
-        result[headerKey] = lowerCaseOriginalHeaders[headerKey];
-      }
       return;
     }
 
@@ -229,6 +226,7 @@ const handler$1 = (
   const headerNames = {};
   res.writeHead = (status, headers) => {
     response.status = status;
+    response.statusDescription = HttpStatusCodes[status];
 
     if (headers) {
       res.headers = Object.assign(res.headers, headers);
@@ -312,24 +310,6 @@ handler$1.SPECIAL_NODE_HEADERS = specialNodeHeaders;
 
 var nextAwsCloudfront = handler$1;
 
-const buildS3RetryStrategy = async () => {
-    const { defaultRetryDecider, StandardRetryStrategy } = await Promise.resolve().then(function () { return require('./index-5569d613.js'); });
-    const retryDecider = (err) => {
-        if ("code" in err &&
-            (err.code === "ECONNRESET" ||
-                err.code === "EPIPE" ||
-                err.code === "ETIMEDOUT")) {
-            return true;
-        }
-        else {
-            return defaultRetryDecider(err);
-        }
-    };
-    return new StandardRetryStrategy(async () => 3, {
-        retryDecider
-    });
-};
-
 /**
  * There are multiple occasions where a static/SSG page will be generated after
  * the initial build. This function accepts a generated page, stores it and
@@ -337,11 +317,10 @@ const buildS3RetryStrategy = async () => {
  * regeneration).
  */
 const s3StorePage = async (options) => {
-    const { S3Client } = await Promise.resolve().then(function () { return require('./S3Client-42b194a7.js'); });
+    const { S3Client } = await Promise.resolve().then(function () { return require('./S3Client-537aa2f3.js'); });
     const s3 = new S3Client({
         region: options.region,
-        maxAttempts: 3,
-        retryStrategy: await buildS3RetryStrategy()
+        maxAttempts: 3
     });
     const s3BasePath = options.basePath
         ? `${options.basePath.replace(/^\//, "")}/`
@@ -374,7 +353,7 @@ const s3StorePage = async (options) => {
         CacheControl: cacheControl,
         Expires: expires
     };
-    const { PutObjectCommand } = await Promise.resolve().then(function () { return require('./PutObjectCommand-2ea9ea52.js'); });
+    const { PutObjectCommand } = await Promise.resolve().then(function () { return require('./PutObjectCommand-75c64cca.js'); });
     await Promise.all([
         s3.send(new PutObjectCommand(s3JsonParams)),
         s3.send(new PutObjectCommand(s3HtmlParams))

@@ -109,9 +109,9 @@ const HttpStatusCodes = {
 
 const toCloudFrontHeaders = (headers, headerNames, originalHeaders) => {
   const result = {};
-  const lowerCaseOriginalHeaders = {};
-  Object.entries(originalHeaders).forEach(([header, value]) => {
-    lowerCaseOriginalHeaders[header.toLowerCase()] = value;
+
+  Object.entries(originalHeaders).forEach(([headerName, headerValue]) => {
+    result[headerName.toLowerCase()] = headerValue;
   });
 
   Object.entries(headers).forEach(([headerName, headerValue]) => {
@@ -119,9 +119,6 @@ const toCloudFrontHeaders = (headers, headerNames, originalHeaders) => {
     headerName = headerNames[headerKey] || headerName;
 
     if (readOnlyCloudFrontHeaders[headerKey]) {
-      if (lowerCaseOriginalHeaders[headerKey]) {
-        result[headerKey] = lowerCaseOriginalHeaders[headerKey];
-      }
       return;
     }
 
@@ -234,6 +231,7 @@ const handler$1 = (
   const headerNames = {};
   res.writeHead = (status, headers) => {
     response.status = status;
+    response.statusDescription = HttpStatusCodes[status];
 
     if (headers) {
       res.headers = Object.assign(res.headers, headers);
@@ -715,11 +713,97 @@ function pathToRegexp(path, keys, options) {
     return stringToRegexp(path, keys, options);
 }
 
+/*!
+ * cookie
+ * Copyright(c) 2012-2014 Roman Shtylman
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+
+/**
+ * Module exports.
+ * @public
+ */
+
+var parse_1 = parse;
+
+/**
+ * Module variables.
+ * @private
+ */
+
+var decode = decodeURIComponent;
+var pairSplitRegExp = /; */;
+
+/**
+ * Parse a cookie header.
+ *
+ * Parse the given cookie header string into an object
+ * The object has the various cookies as keys(names) => values
+ *
+ * @param {string} str
+ * @param {object} [options]
+ * @return {object}
+ * @public
+ */
+
+function parse(str, options) {
+  if (typeof str !== 'string') {
+    throw new TypeError('argument str must be a string');
+  }
+
+  var obj = {};
+  var opt = options || {};
+  var pairs = str.split(pairSplitRegExp);
+  var dec = opt.decode || decode;
+
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i];
+    var eq_idx = pair.indexOf('=');
+
+    // skip things that don't look like key=value
+    if (eq_idx < 0) {
+      continue;
+    }
+
+    var key = pair.substr(0, eq_idx).trim();
+    var val = pair.substr(++eq_idx, pair.length).trim();
+
+    // quoted values
+    if ('"' == val[0]) {
+      val = val.slice(1, -1);
+    }
+
+    // only assign once
+    if (undefined == obj[key]) {
+      obj[key] = tryDecode(val, dec);
+    }
+  }
+
+  return obj;
+}
+
+/**
+ * Try decoding a string using a decoding function.
+ *
+ * @param {string} str
+ * @param {function} decode
+ * @private
+ */
+
+function tryDecode(str, decode) {
+  try {
+    return decode(str);
+  } catch (e) {
+    return str;
+  }
+}
+
 const findDomainLocale = (req, manifest) => {
-    var _a;
-    const domains = manifest.i18n && manifest.i18n.domains ? manifest.i18n.domains : null;
+    var _a, _b;
+    const domains = (_a = manifest.i18n) === null || _a === void 0 ? void 0 : _a.domains;
     if (domains) {
-        const hostHeaders = (_a = req.headers.host) === null || _a === void 0 ? void 0 : _a.split(",");
+        const hostHeaders = (_b = req.headers.host) === null || _b === void 0 ? void 0 : _b.split(",");
         if (hostHeaders && hostHeaders.length > 0) {
             const host = hostHeaders[0];
             const matchedDomain = domains.find((d) => d.domain === host);
@@ -773,19 +857,20 @@ function dropLocaleFromPath(path, routesManifest) {
     return path;
 }
 const getAcceptLanguageLocale = async (acceptLanguage, manifest, routesManifest) => {
+    var _a;
     if (routesManifest.i18n) {
-        const defaultLocale = routesManifest.i18n.defaultLocale;
+        const defaultLocaleLowerCase = (_a = routesManifest.i18n.defaultLocale) === null || _a === void 0 ? void 0 : _a.toLowerCase();
         const locales = new Set(routesManifest.i18n.locales.map((locale) => locale.toLowerCase()));
         // Accept.language(header, locales) prefers the locales order,
         // so we ask for all to find the order preferred by user.
         const Accept = await Promise.resolve().then(function () { return require('./index-4b0544e0.js'); }).then(function (n) { return n.index; });
         for (const language of Accept.languages(acceptLanguage)) {
-            const locale = language.toLowerCase();
-            if (locale === defaultLocale) {
+            const localeLowerCase = language.toLowerCase();
+            if (localeLowerCase === defaultLocaleLowerCase) {
                 break;
             }
-            if (locales.has(locale)) {
-                return `${routesManifest.basePath}/${locale}${manifest.trailingSlash ? "/" : ""}`;
+            if (locales.has(localeLowerCase)) {
+                return `${routesManifest.basePath}/${language}${manifest.trailingSlash ? "/" : ""}`;
             }
         }
     }
@@ -803,6 +888,67 @@ function getLocalePrefixFromUri(uri, routesManifest) {
         return `/${routesManifest.i18n.defaultLocale}`;
     }
     return "";
+}
+/**
+ * Get a redirect to the locale-specific domain. Returns undefined if no redirect found.
+ * @param req
+ * @param routesManifest
+ */
+async function getLocaleDomainRedirect(req, routesManifest) {
+    var _a, _b, _c, _d, _e, _f;
+    // Redirect to correct domain based on user's language
+    const domains = (_a = routesManifest.i18n) === null || _a === void 0 ? void 0 : _a.domains;
+    const hostHeaders = req.headers.host;
+    if (domains && hostHeaders && hostHeaders.length > 0) {
+        const host = hostHeaders[0].value.split(":")[0];
+        const languageHeader = req.headers["accept-language"];
+        const acceptLanguage = languageHeader && ((_b = languageHeader[0]) === null || _b === void 0 ? void 0 : _b.value);
+        const headerCookies = req.headers.cookie
+            ? (_c = req.headers.cookie[0]) === null || _c === void 0 ? void 0 : _c.value
+            : undefined;
+        // Use cookies first, otherwise use the accept-language header
+        let acceptLanguages = [];
+        let nextLocale;
+        if (headerCookies) {
+            const cookies = parse_1(headerCookies);
+            nextLocale = cookies["NEXT_LOCALE"];
+        }
+        if (nextLocale) {
+            acceptLanguages = [nextLocale.toLowerCase()];
+        }
+        else {
+            const Accept = await Promise.resolve().then(function () { return require('./index-4b0544e0.js'); }).then(function (n) { return n.index; });
+            acceptLanguages = Accept.languages(acceptLanguage).map((lang) => lang.toLowerCase());
+        }
+        // Try to find the right domain to redirect to if needed
+        // First check current domain can support any preferred language, if so do not redirect
+        const currentDomainData = domains.find((domainData) => domainData.domain === host);
+        if (currentDomainData) {
+            for (const language of acceptLanguages) {
+                if (((_d = currentDomainData.defaultLocale) === null || _d === void 0 ? void 0 : _d.toLowerCase()) === language ||
+                    ((_e = currentDomainData.locales) === null || _e === void 0 ? void 0 : _e.map((locale) => locale.toLowerCase()).includes(language))) {
+                    return undefined;
+                }
+            }
+        }
+        // Try to find domain whose default locale matched preferred language in order
+        for (const language of acceptLanguages) {
+            for (const domainData of domains) {
+                if (domainData.defaultLocale.toLowerCase() === language) {
+                    return `${domainData.domain}${req.uri}`;
+                }
+            }
+        }
+        // Try to find domain whose supported locales matches preferred language in order
+        for (const language of acceptLanguages) {
+            for (const domainData of domains) {
+                if ((_f = domainData.locales) === null || _f === void 0 ? void 0 : _f.map((locale) => locale.toLowerCase()).includes(language)) {
+                    return `${domainData.domain}${req.uri}`;
+                }
+            }
+        }
+    }
+    return undefined;
 }
 
 /**
@@ -950,12 +1096,135 @@ const normalise = (uri, routesManifest) => {
     return uri === "" ? "/" : uri;
 };
 
+const staticNotFound = (uri, manifest, routesManifest) => {
+    const localePrefix = getLocalePrefixFromUri(uri, routesManifest);
+    const notFoundUri = `${localePrefix}/404`;
+    const static404 = manifest.pages.html.nonDynamic[notFoundUri] ||
+        manifest.pages.ssg.nonDynamic[notFoundUri];
+    if (static404) {
+        return {
+            isData: false,
+            isStatic: true,
+            file: `pages${notFoundUri}.html`,
+            statusCode: 404
+        };
+    }
+};
+const notFoundData = (uri, manifest, routesManifest) => {
+    return (staticNotFound(uri, manifest, routesManifest) || {
+        isData: true,
+        isRender: true,
+        page: "pages/_error.js",
+        statusCode: 404
+    });
+};
+const notFoundPage = (uri, manifest, routesManifest) => {
+    return (staticNotFound(uri, manifest, routesManifest) || {
+        isData: false,
+        isRender: true,
+        page: "pages/_error.js",
+        statusCode: 404
+    });
+};
+
+const pageHtml = (localeUri) => {
+    if (localeUri == "/") {
+        return "pages/index.html";
+    }
+    return `pages${localeUri}.html`;
+};
+const handlePageReq = (uri, manifest, routesManifest, isPreview, isRewrite) => {
+    var _a, _b;
+    const { pages } = manifest;
+    const localeUri = normalise(addDefaultLocaleToPath(uri, routesManifest), routesManifest);
+    if (pages.html.nonDynamic[localeUri]) {
+        const nonLocaleUri = dropLocaleFromPath(localeUri, routesManifest);
+        const statusCode = nonLocaleUri === "/404" ? 404 : nonLocaleUri === "/500" ? 500 : undefined;
+        return {
+            isData: false,
+            isStatic: true,
+            file: pages.html.nonDynamic[localeUri],
+            statusCode
+        };
+    }
+    if (pages.ssg.nonDynamic[localeUri] && !isPreview) {
+        const ssg = pages.ssg.nonDynamic[localeUri];
+        const route = (_a = ssg.srcRoute) !== null && _a !== void 0 ? _a : localeUri;
+        const nonLocaleUri = dropLocaleFromPath(localeUri, routesManifest);
+        const statusCode = nonLocaleUri === "/404" ? 404 : nonLocaleUri === "/500" ? 500 : undefined;
+        return {
+            isData: false,
+            isStatic: true,
+            file: pageHtml(localeUri),
+            // page JS path is from SSR entries in manifest
+            page: pages.ssr.nonDynamic[route] || pages.ssr.dynamic[route],
+            revalidate: ssg.initialRevalidateSeconds,
+            statusCode
+        };
+    }
+    if (((_b = pages.ssg.notFound) !== null && _b !== void 0 ? _b : {})[localeUri] && !isPreview) {
+        return notFoundPage(uri, manifest, routesManifest);
+    }
+    if (pages.ssr.nonDynamic[localeUri]) {
+        return {
+            isData: false,
+            isRender: true,
+            page: pages.ssr.nonDynamic[localeUri]
+        };
+    }
+    const rewrite = !isRewrite && getRewritePath(uri, routesManifest, manifest);
+    if (rewrite) {
+        const [path, querystring] = rewrite.split("?");
+        if (isExternalRewrite(path)) {
+            return {
+                isExternal: true,
+                path,
+                querystring
+            };
+        }
+        const route = handlePageReq(path, manifest, routesManifest, isPreview, true);
+        return {
+            ...route,
+            querystring
+        };
+    }
+    const dynamic = matchDynamicRoute(localeUri, pages.dynamic);
+    const dynamicSSG = dynamic && pages.ssg.dynamic[dynamic];
+    if (dynamicSSG) {
+        return {
+            isData: false,
+            isStatic: true,
+            file: pageHtml(localeUri),
+            page: dynamic ? pages.ssr.dynamic[dynamic] : undefined,
+            fallback: dynamicSSG.fallback
+        };
+    }
+    const dynamicSSR = dynamic && pages.ssr.dynamic[dynamic];
+    if (dynamicSSR) {
+        return {
+            isData: false,
+            isRender: true,
+            page: dynamicSSR
+        };
+    }
+    const dynamicHTML = dynamic && pages.html.dynamic[dynamic];
+    if (dynamicHTML) {
+        return {
+            isData: false,
+            isStatic: true,
+            file: dynamicHTML
+        };
+    }
+    return notFoundPage(uri, manifest, routesManifest);
+};
+
 /**
  * Get the rewrite of the given path, if it exists.
- * @param path
+ * @param uri
+ * @param pageManifest
  * @param routesManifest
  */
-function getRewritePath(uri, routesManifest) {
+function getRewritePath(uri, routesManifest, pageManifest) {
     const path = addDefaultLocaleToPath(uri, routesManifest);
     const rewrites = routesManifest.rewrites;
     for (const rewrite of rewrites) {
@@ -967,6 +1236,13 @@ function getRewritePath(uri, routesManifest) {
         const destination = compileDestination(rewrite.destination, params);
         if (!destination) {
             return;
+        }
+        // No-op rewrite support for pages: skip to next rewrite if path does not map to existing non-dynamic and dynamic routes
+        if (pageManifest && path === destination) {
+            const url = handlePageReq(destination, pageManifest, routesManifest, false, true);
+            if (url.statusCode === 404) {
+                continue;
+            }
         }
         // Pass unused params to destination
         // except nextInternalLocale param since it's already in path prefix
@@ -1015,37 +1291,6 @@ function getUnauthenticatedResponse(authorizationHeaders, authentication) {
     }
 }
 
-const staticNotFound = (uri, manifest, routesManifest) => {
-    const localePrefix = getLocalePrefixFromUri(uri, routesManifest);
-    const notFoundUri = `${localePrefix}/404`;
-    const static404 = manifest.pages.html.nonDynamic[notFoundUri] ||
-        manifest.pages.ssg.nonDynamic[notFoundUri];
-    if (static404) {
-        return {
-            isData: false,
-            isStatic: true,
-            file: `pages${notFoundUri}.html`,
-            statusCode: 404
-        };
-    }
-};
-const notFoundData = (uri, manifest, routesManifest) => {
-    return (staticNotFound(uri, manifest, routesManifest) || {
-        isData: true,
-        isRender: true,
-        page: "pages/_error.js",
-        statusCode: 404
-    });
-};
-const notFoundPage = (uri, manifest, routesManifest) => {
-    return (staticNotFound(uri, manifest, routesManifest) || {
-        isData: false,
-        isRender: true,
-        page: "pages/_error.js",
-        statusCode: 404
-    });
-};
-
 /*
  * Get page name from data route
  */
@@ -1073,7 +1318,7 @@ const fullDataUri = (uri, buildId) => {
  * Handles a data route
  */
 const handleDataReq = (uri, manifest, routesManifest, isPreview) => {
-    var _a;
+    var _a, _b;
     const { buildId, pages } = manifest;
     const localeUri = addDefaultLocaleToPath(normaliseDataUri(uri, buildId), routesManifest);
     if (pages.ssg.nonDynamic[localeUri] && !isPreview) {
@@ -1086,6 +1331,9 @@ const handleDataReq = (uri, manifest, routesManifest, isPreview) => {
             page: pages.ssr.nonDynamic[route],
             revalidate: ssg.initialRevalidateSeconds
         };
+    }
+    if (((_b = pages.ssg.notFound) !== null && _b !== void 0 ? _b : {})[localeUri] && !isPreview) {
+        return notFoundData(uri, manifest, routesManifest);
     }
     if (pages.ssr.nonDynamic[localeUri]) {
         return {
@@ -1116,180 +1364,6 @@ const handleDataReq = (uri, manifest, routesManifest, isPreview) => {
     return notFoundData(uri, manifest, routesManifest);
 };
 
-const pageHtml = (localeUri) => {
-    if (localeUri == "/") {
-        return "pages/index.html";
-    }
-    return `pages${localeUri}.html`;
-};
-const handlePageReq = (uri, manifest, routesManifest, isPreview, isRewrite) => {
-    var _a;
-    const { pages } = manifest;
-    const localeUri = normalise(addDefaultLocaleToPath(uri, routesManifest), routesManifest);
-    if (pages.html.nonDynamic[localeUri]) {
-        const nonLocaleUri = dropLocaleFromPath(localeUri, routesManifest);
-        const statusCode = nonLocaleUri === "/404" ? 404 : nonLocaleUri === "/500" ? 500 : undefined;
-        return {
-            isData: false,
-            isStatic: true,
-            file: pages.html.nonDynamic[localeUri],
-            statusCode
-        };
-    }
-    if (pages.ssg.nonDynamic[localeUri] && !isPreview) {
-        const ssg = pages.ssg.nonDynamic[localeUri];
-        const route = (_a = ssg.srcRoute) !== null && _a !== void 0 ? _a : localeUri;
-        const nonLocaleUri = dropLocaleFromPath(localeUri, routesManifest);
-        const statusCode = nonLocaleUri === "/404" ? 404 : nonLocaleUri === "/500" ? 500 : undefined;
-        return {
-            isData: false,
-            isStatic: true,
-            file: pageHtml(localeUri),
-            // page JS path is from SSR entries in manifest
-            page: pages.ssr.nonDynamic[route] || pages.ssr.dynamic[route],
-            revalidate: ssg.initialRevalidateSeconds,
-            statusCode
-        };
-    }
-    if (pages.ssr.nonDynamic[localeUri]) {
-        return {
-            isData: false,
-            isRender: true,
-            page: pages.ssr.nonDynamic[localeUri]
-        };
-    }
-    const rewrite = !isRewrite && getRewritePath(uri, routesManifest);
-    if (rewrite) {
-        const [path, querystring] = rewrite.split("?");
-        if (isExternalRewrite(path)) {
-            return {
-                isExternal: true,
-                path,
-                querystring
-            };
-        }
-        const route = handlePageReq(path, manifest, routesManifest, isPreview, true);
-        return {
-            ...route,
-            querystring
-        };
-    }
-    const dynamic = matchDynamicRoute(localeUri, pages.dynamic);
-    const dynamicSSG = dynamic && pages.ssg.dynamic[dynamic];
-    if (dynamicSSG) {
-        return {
-            isData: false,
-            isStatic: true,
-            file: pageHtml(localeUri),
-            page: dynamic ? pages.ssr.dynamic[dynamic] : undefined,
-            fallback: dynamicSSG.fallback
-        };
-    }
-    const dynamicSSR = dynamic && pages.ssr.dynamic[dynamic];
-    if (dynamicSSR) {
-        return {
-            isData: false,
-            isRender: true,
-            page: dynamicSSR
-        };
-    }
-    const dynamicHTML = dynamic && pages.html.dynamic[dynamic];
-    if (dynamicHTML) {
-        return {
-            isData: false,
-            isStatic: true,
-            file: dynamicHTML
-        };
-    }
-    return notFoundPage(uri, manifest, routesManifest);
-};
-
-/*!
- * cookie
- * Copyright(c) 2012-2014 Roman Shtylman
- * Copyright(c) 2015 Douglas Christopher Wilson
- * MIT Licensed
- */
-
-/**
- * Module exports.
- * @public
- */
-
-var parse_1 = parse;
-
-/**
- * Module variables.
- * @private
- */
-
-var decode = decodeURIComponent;
-var pairSplitRegExp = /; */;
-
-/**
- * Parse a cookie header.
- *
- * Parse the given cookie header string into an object
- * The object has the various cookies as keys(names) => values
- *
- * @param {string} str
- * @param {object} [options]
- * @return {object}
- * @public
- */
-
-function parse(str, options) {
-  if (typeof str !== 'string') {
-    throw new TypeError('argument str must be a string');
-  }
-
-  var obj = {};
-  var opt = options || {};
-  var pairs = str.split(pairSplitRegExp);
-  var dec = opt.decode || decode;
-
-  for (var i = 0; i < pairs.length; i++) {
-    var pair = pairs[i];
-    var eq_idx = pair.indexOf('=');
-
-    // skip things that don't look like key=value
-    if (eq_idx < 0) {
-      continue;
-    }
-
-    var key = pair.substr(0, eq_idx).trim();
-    var val = pair.substr(++eq_idx, pair.length).trim();
-
-    // quoted values
-    if ('"' == val[0]) {
-      val = val.slice(1, -1);
-    }
-
-    // only assign once
-    if (undefined == obj[key]) {
-      obj[key] = tryDecode(val, dec);
-    }
-  }
-
-  return obj;
-}
-
-/**
- * Try decoding a string using a decoding function.
- *
- * @param {string} str
- * @param {function} decode
- * @private
- */
-
-function tryDecode(str, decode) {
-  try {
-    return decode(str);
-  } catch (e) {
-    return str;
-  }
-}
-
 const NEXT_PREVIEW_DATA_COOKIE = "__next_preview_data";
 const NEXT_PRERENDER_BYPASS_COOKIE = "__prerender_bypass";
 const defaultPreviewCookies = {
@@ -1306,7 +1380,7 @@ const isValidPreviewRequest = async (cookies, previewModeSigningKey) => {
     const previewCookies = getPreviewCookies(cookies);
     if (hasPreviewCookies(previewCookies)) {
         try {
-            const jsonwebtoken = await Promise.resolve().then(function () { return require('./index-084130cb.js'); }).then(function (n) { return n.index; });
+            const jsonwebtoken = await Promise.resolve().then(function () { return require('./index-28e499d1.js'); }).then(function (n) { return n.index; });
             jsonwebtoken.verify(previewCookies[NEXT_PREVIEW_DATA_COOKIE], previewModeSigningKey);
             return true;
         }
@@ -1356,6 +1430,12 @@ function createRedirectResponse(uri, querystring, statusCode) {
             }
         ]
         : [];
+    const cacheControl = [
+        {
+            key: "Cache-Control",
+            value: "s-maxage=0"
+        }
+    ];
     return {
         isRedirect: true,
         status: status,
@@ -1367,7 +1447,8 @@ function createRedirectResponse(uri, querystring, statusCode) {
                     value: location
                 }
             ],
-            refresh: refresh
+            refresh: refresh,
+            "cache-control": cacheControl
         }
     };
 }
@@ -1388,7 +1469,7 @@ function getDomainRedirectPath(request, manifest) {
 }
 /**
  * Redirect from root to locale.
- * @param request
+ * @param req
  * @param routesManifest
  * @param manifest
  */
@@ -1396,7 +1477,12 @@ async function getLanguageRedirectPath(req, manifest, routesManifest) {
     var _a, _b, _c;
     // Check for disabled locale detection: https://nextjs.org/docs/advanced-features/i18n-routing#disabling-automatic-locale-detection
     if (((_a = routesManifest.i18n) === null || _a === void 0 ? void 0 : _a.localeDetection) === false) {
-        return;
+        return undefined;
+    }
+    // Try to get locale domain redirect
+    const localeDomainRedirect = await getLocaleDomainRedirect(req, routesManifest);
+    if (localeDomainRedirect) {
+        return localeDomainRedirect;
     }
     const basePath = routesManifest.basePath;
     const trailingSlash = manifest.trailingSlash;
@@ -1640,12 +1726,29 @@ const handleDefault = async (event, manifest, prerenderManifest, routesManifest,
     return route;
 };
 
+const renderNotFound = async (event, manifest, routesManifest, getPage) => {
+    var _a;
+    const route = notFoundPage((_a = event.req.url) !== null && _a !== void 0 ? _a : "", manifest, routesManifest);
+    if (route.isStatic) {
+        return route;
+    }
+    return await renderRoute(event, route, manifest, routesManifest, getPage);
+};
 const renderFallback = async (event, route, manifest, routesManifest, getPage) => {
     const { req, res } = event;
     setCustomHeaders(event, routesManifest);
     const page = getPage(route.page);
     try {
         const { html, renderOpts } = await page.renderReqToHTML(req, res, "passthrough");
+        if (renderOpts.isNotFound) {
+            if (route.isData) {
+                res.setHeader("Content-Type", "application/json");
+                res.statusCode = 404;
+                res.end(JSON.stringify({ notFound: true }));
+                return;
+            }
+            return renderNotFound(event, manifest, routesManifest, getPage);
+        }
         return { isStatic: false, route, html, renderOpts };
     }
     catch (error) {
@@ -1662,7 +1765,6 @@ const renderFallback = async (event, route, manifest, routesManifest, getPage) =
  * returns as StaticRoute for the caller to handle.
  */
 const handleFallback = async (event, route, manifest, routesManifest, getPage) => {
-    var _a;
     // This should not be needed if all SSR routes are handled correctly
     if (route.isRender) {
         return renderRoute(event, route, manifest, routesManifest, getPage);
@@ -1679,11 +1781,7 @@ const handleFallback = async (event, route, manifest, routesManifest, getPage) =
             return { ...staticRoute, file: `pages${staticRoute.fallback}` };
         }
     }
-    const errorRoute = notFoundPage((_a = event.req.url) !== null && _a !== void 0 ? _a : "", manifest, routesManifest);
-    if (errorRoute.isStatic) {
-        return errorRoute;
-    }
-    return renderRoute(event, errorRoute, manifest, routesManifest, getPage);
+    return await renderNotFound(event, manifest, routesManifest, getPage);
 };
 
 const firstRegenerateExpiryDate = (lastModifiedHeader, initialRevalidateSeconds) => {
@@ -1799,24 +1897,6 @@ const externalRewrite = async (event, enableHTTPCompression, rewrite) => {
     return await responsePromise;
 };
 
-const buildS3RetryStrategy = async () => {
-    const { defaultRetryDecider, StandardRetryStrategy } = await Promise.resolve().then(function () { return require('./index-5569d613.js'); });
-    const retryDecider = (err) => {
-        if ("code" in err &&
-            (err.code === "ECONNRESET" ||
-                err.code === "EPIPE" ||
-                err.code === "ETIMEDOUT")) {
-            return true;
-        }
-        else {
-            return defaultRetryDecider(err);
-        }
-    };
-    return new StandardRetryStrategy(async () => 3, {
-        retryDecider
-    });
-};
-
 const blacklistedHeaders = [
     "connection",
     "expect",
@@ -1855,7 +1935,9 @@ function removeBlacklistedHeaders(headers) {
 const s3BucketNameFromEventRequest = (request) => {
     var _a;
     const { region, domainName } = ((_a = request.origin) === null || _a === void 0 ? void 0 : _a.s3) || {};
-    return domainName === null || domainName === void 0 ? void 0 : domainName.replace(`.s3.${region}.amazonaws.com`, "");
+    return !!region && (domainName === null || domainName === void 0 ? void 0 : domainName.includes(region))
+        ? domainName === null || domainName === void 0 ? void 0 : domainName.replace(`.s3.${region}.amazonaws.com`, "")
+        : domainName === null || domainName === void 0 ? void 0 : domainName.replace(`.s3.amazonaws.com`, "");
 };
 
 const triggerStaticRegeneration = async (options) => {
@@ -1868,11 +1950,10 @@ const triggerStaticRegeneration = async (options) => {
     if (!region) {
         throw new Error("Expected region to be defined");
     }
-    const { SQSClient, SendMessageCommand } = await Promise.resolve().then(function () { return require('./index-244fdbd1.js'); });
+    const { SQSClient, SendMessageCommand } = await Promise.resolve().then(function () { return require('./index-94ce7346.js'); });
     const sqs = new SQSClient({
         region,
-        maxAttempts: 1,
-        retryStrategy: await buildS3RetryStrategy()
+        maxAttempts: 1
     });
     const regenerationEvent = {
         region,
@@ -1915,11 +1996,10 @@ const triggerStaticRegeneration = async (options) => {
  * regeneration).
  */
 const s3StorePage = async (options) => {
-    const { S3Client } = await Promise.resolve().then(function () { return require('./S3Client-e42b99dc.js'); });
+    const { S3Client } = await Promise.resolve().then(function () { return require('./S3Client-7d120aeb.js'); });
     const s3 = new S3Client({
         region: options.region,
-        maxAttempts: 3,
-        retryStrategy: await buildS3RetryStrategy()
+        maxAttempts: 3
     });
     const s3BasePath = options.basePath
         ? `${options.basePath.replace(/^\//, "")}/`
@@ -1952,7 +2032,7 @@ const s3StorePage = async (options) => {
         CacheControl: cacheControl,
         Expires: expires
     };
-    const { PutObjectCommand } = await Promise.resolve().then(function () { return require('./PutObjectCommand-3eb01b81.js'); });
+    const { PutObjectCommand } = await Promise.resolve().then(function () { return require('./PutObjectCommand-a528320b.js'); });
     await Promise.all([
         s3.send(new PutObjectCommand(s3JsonParams)),
         s3.send(new PutObjectCommand(s3HtmlParams))
@@ -2037,13 +2117,17 @@ const staticRequest = (request, file, path) => {
     return request;
 };
 const reconstructOriginalRequestUri = (s3Uri, manifest) => {
+    // For public files we do not replace .html as it can cause public HTML files to be classified with wrong status code
+    const publicFile = handlePublicFiles(s3Uri, manifest);
+    if (publicFile) {
+        return `${basePath}${s3Uri}`;
+    }
     let originalUri = `${basePath}${s3Uri.replace(/(\.html)?$/, manifest.trailingSlash ? "/" : "")}`;
     // For index.html page, it will become "/index", which is not a route so normalize it to "/"
-    originalUri = originalUri.replace(/^(\/index)?$/, "/");
+    originalUri = originalUri.replace(/\/index$/, "/");
     return originalUri;
 };
 const handleOriginRequest = async ({ event, manifest, prerenderManifest, routesManifest }) => {
-    var _a;
     const request = event.Records[0].cf.request;
     const { req, res, responsePromise } = nextAwsCloudfront(event.Records[0].cf, {
         enableHTTPCompression: manifest.enableHTTPCompression
@@ -2074,10 +2158,6 @@ const handleOriginRequest = async ({ event, manifest, prerenderManifest, routesM
         const path = isData
             ? `${routesManifest.basePath}`
             : `${routesManifest.basePath}/static-pages/${manifest.buildId}`;
-        // This should not be necessary with static pages,
-        // but makes it easier to test rewrites
-        const [, querystring] = ((_a = req.url) !== null && _a !== void 0 ? _a : "").split("?");
-        request.querystring = querystring || "";
         const relativeFile = isData ? file : file.slice("pages".length);
         return staticRequest(request, relativeFile, path);
     }
@@ -2096,12 +2176,14 @@ const handleOriginResponse = async ({ event, manifest, prerenderManifest, routes
     const route = await routeDefault(request, manifest, prerenderManifest, routesManifest);
     const staticRoute = route.isStatic ? route : undefined;
     const statusCode = route === null || route === void 0 ? void 0 : route.statusCode;
-    if (response.status !== "403") {
+    // These statuses are returned when S3 does not have access to the page.
+    // 404 will also be returned if CloudFront has permissions to list objects.
+    if (response.status !== "403" && response.status !== "404") {
         response.headers = {
             ...response.headers,
             ...getCustomHeaders(request.uri, routesManifest)
         };
-        // Set 404 status code for static 400 page.
+        // Set 404 status code for static 404 page.
         if (statusCode === 404) {
             response.status = "404";
             response.statusDescription = "Not Found";
@@ -2174,18 +2256,17 @@ const handleOriginResponse = async ({ event, manifest, prerenderManifest, routes
         return await responsePromise;
     }
     // Lazily import only S3Client to reduce init times until actually needed
-    const { S3Client } = await Promise.resolve().then(function () { return require('./S3Client-e42b99dc.js'); });
+    const { S3Client } = await Promise.resolve().then(function () { return require('./S3Client-7d120aeb.js'); });
     const s3 = new S3Client({
         region: (_h = (_g = request.origin) === null || _g === void 0 ? void 0 : _g.s3) === null || _h === void 0 ? void 0 : _h.region,
-        maxAttempts: 3,
-        retryStrategy: await buildS3RetryStrategy()
+        maxAttempts: 3
     });
     const s3BasePath = basePath ? `${basePath.replace(/^\//, "")}/` : "";
     // Either a fallback: true page or a static error page
     if (fallbackRoute.isStatic) {
         const file = fallbackRoute.file.slice("pages".length);
         const s3Key = `${s3BasePath}static-pages/${manifest.buildId}${file}`;
-        const { GetObjectCommand } = await Promise.resolve().then(function () { return require('./GetObjectCommand-631a1044.js'); });
+        const { GetObjectCommand } = await Promise.resolve().then(function () { return require('./GetObjectCommand-4d1de345.js'); });
         // S3 Body is stream per: https://github.com/aws/aws-sdk-js-v3/issues/1096
         const getStream = await Promise.resolve().then(function () { return require('./index-891c56ba.js'); }).then(function (n) { return n.index; });
         const s3Params = {
@@ -2194,38 +2275,19 @@ const handleOriginResponse = async ({ event, manifest, prerenderManifest, routes
         };
         const s3Response = await s3.send(new GetObjectCommand(s3Params));
         const bodyString = await getStream.default(s3Response.Body);
-        const statusCode = (fallbackRoute.statusCode || 200).toString();
-        const is404 = statusCode === "404";
-        const is500 = statusCode === "500";
-        return {
-            status: statusCode,
-            statusDescription: is500
-                ? "Internal Server Error"
-                : is404
-                    ? "Not Found"
-                    : "OK",
-            headers: {
-                ...response.headers,
-                ...getCustomHeaders(request.uri, routesManifest),
-                "content-type": [
-                    {
-                        key: "Content-Type",
-                        value: "text/html"
-                    }
-                ],
-                "cache-control": [
-                    {
-                        key: "Cache-Control",
-                        value: is500
-                            ? "public, max-age=0, s-maxage=0, must-revalidate" // static 500 page should never be cached
-                            : (_j = s3Response.CacheControl) !== null && _j !== void 0 ? _j : (fallbackRoute.fallback // Use cache-control from S3 response if possible, otherwise use defaults
-                                ? "public, max-age=0, s-maxage=0, must-revalidate" // fallback should never be cached
-                                : "public, max-age=0, s-maxage=2678400, must-revalidate")
-                    }
-                ]
-            },
-            body: bodyString
-        };
+        const statusCode = fallbackRoute.statusCode || 200;
+        const is500 = statusCode === 500;
+        const cacheControl = is500
+            ? "public, max-age=0, s-maxage=0, must-revalidate" // static 500 page should never be cached
+            : (_j = s3Response.CacheControl) !== null && _j !== void 0 ? _j : (fallbackRoute.fallback // Use cache-control from S3 response if possible, otherwise use defaults
+                ? "public, max-age=0, s-maxage=0, must-revalidate" // fallback should never be cached
+                : "public, max-age=0, s-maxage=2678400, must-revalidate");
+        res.writeHead(statusCode, {
+            "Cache-Control": cacheControl,
+            "Content-Type": "text/html"
+        });
+        res.end(bodyString);
+        return await responsePromise;
     }
     // This is a fallback route that should be stored in S3 before returning it
     const { renderOpts, html } = fallbackRoute;
@@ -2248,11 +2310,6 @@ const handleOriginResponse = async ({ event, manifest, prerenderManifest, routes
         : null;
     const cacheControl = (isrResponse && isrResponse.cacheControl) ||
         "public, max-age=0, s-maxage=2678400, must-revalidate";
-    const outHeaders = {};
-    Object.entries(response.headers).map(([name, headers]) => {
-        outHeaders[name] = headers.map(({ value }) => value);
-    });
-    res.writeHead(200, outHeaders);
     res.setHeader("Cache-Control", cacheControl);
     if (fallbackRoute.route.isData) {
         res.setHeader("Content-Type", "application/json");

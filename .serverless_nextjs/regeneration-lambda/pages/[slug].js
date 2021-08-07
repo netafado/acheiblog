@@ -284,7 +284,7 @@ async function getStaticProps(context) {
 
 /***/ }),
 
-/***/ 48422:
+/***/ 1561:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -377,11 +377,11 @@ __webpack_require__.r(__webpack_exports__);
         rewrites: combinedRewrites,
         i18n: undefined,
         page: "/[slug]",
-        buildId: "ik7OopsZM2pDZgvlEYIQl",
-        escapedBuildId: "ik7OopsZM2pDZgvlEYIQl",
+        buildId: "989WI79iw2mbkHtbjLXpI",
+        escapedBuildId: "989WI79iw2mbkHtbjLXpI",
         basePath: "",
         pageIsDynamic: true,
-        encodedPreviewProps: {previewModeId:"49386be86afe63d21bfe4e89b0d5cc6c",previewModeSigningKey:"e2bcafc706a7b341bff591fcac0c83daec4b0a7ed8151f0e1ba4642ca3486a7f",previewModeEncryptionKey:"1495e1bb4e2467fe61dea36116794cb6a08ebb72835503181c3a16101ad28ecd"}
+        encodedPreviewProps: {previewModeId:"a8fbc1427b74fe586535737172ee21f7",previewModeSigningKey:"97dfe7bce146b4cddcb73b4902a818f12ac2c31198f24811374b96395d931f1c",previewModeEncryptionKey:"6f23a783f8d5cd359ba748390b41d30beb638bffa1fadb59740a83905aee76aa"}
       })
       
     
@@ -577,7 +577,7 @@ module.exports = require("zlib");;
 /******/ 	__webpack_require__.x = function() {
 /******/ 		// Load entry module and return exports
 /******/ 		// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,911,959,163,408,428,82,634,295], function() { return __webpack_require__(48422); })
+/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,911,959,134,408,428,82,634,295], function() { return __webpack_require__(1561); })
 /******/ 		__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 		return __webpack_exports__;
 /******/ 	};
@@ -741,7 +741,7 @@ module.exports = require("zlib");;
 /******/ 			__webpack_require__.e(920);
 /******/ 			__webpack_require__.e(911);
 /******/ 			__webpack_require__.e(959);
-/******/ 			__webpack_require__.e(163);
+/******/ 			__webpack_require__.e(134);
 /******/ 			__webpack_require__.e(408);
 /******/ 			__webpack_require__.e(428);
 /******/ 			__webpack_require__.e(82);

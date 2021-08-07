@@ -324,6 +324,20 @@ function Index(props) {
         href: "https://pro.fontawesome.com/releases/v5.15.3/css/all.css",
         integrity: "sha384-iKbFRxucmOHIcpWdX9NTZ5WETOPm0Goy0WmfyNcl52qSYtc2Buk0NCe6jU1sWWNB",
         crossOrigin: "anonymous"
+      }), /*#__PURE__*/jsx_runtime.jsx("script", {
+        async: true,
+        src: `https://www.googletagmanager.com/gtag/js?id=G-3HJSRVT06E`
+      }), /*#__PURE__*/jsx_runtime.jsx("script", {
+        dangerouslySetInnerHTML: {
+          __html: `
+
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-3HJSRVT06E');
+          `
+        }
       })]
     }), /*#__PURE__*/jsx_runtime.jsx(navbar, {}), /*#__PURE__*/(0,jsx_runtime.jsxs)("div", {
       className: "wrapper ",
