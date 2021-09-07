@@ -330,7 +330,6 @@ function Index(props) {
       }), /*#__PURE__*/jsx_runtime.jsx("script", {
         dangerouslySetInnerHTML: {
           __html: `
-
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());

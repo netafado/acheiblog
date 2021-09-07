@@ -18,7 +18,7 @@ function handler(req, res) {
 
 /***/ }),
 
-/***/ 13525:
+/***/ 7079:
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -55,7 +55,7 @@ __webpack_require__.r(__webpack_exports__);
           page: "/api/hello",
           basePath: "",
           pageIsDynamic: false,
-          encodedPreviewProps: {previewModeId:"a8fbc1427b74fe586535737172ee21f7",previewModeSigningKey:"97dfe7bce146b4cddcb73b4902a818f12ac2c31198f24811374b96395d931f1c",previewModeEncryptionKey:"6f23a783f8d5cd359ba748390b41d30beb638bffa1fadb59740a83905aee76aa"}
+          encodedPreviewProps: {previewModeId:"0bb9ba6b023139c30cd8927eb07117fe",previewModeSigningKey:"8ae89601fba042bee7aa5083e78ef314f2dc54430e5121c5d47a472c61dc4d19",previewModeEncryptionKey:"9e846fa287e27e36ff054a7fa6bebc7f02a114eaeb0c57c5261c65e3be7ca61b"}
         })
         /* harmony default export */ __webpack_exports__["default"] = (apiHandler);
       
@@ -192,7 +192,7 @@ module.exports = require("zlib");;
 /******/ 	__webpack_require__.x = function() {
 /******/ 		// Load entry module and return exports
 /******/ 		// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,339,428], function() { return __webpack_require__(13525); })
+/******/ 		var __webpack_exports__ = __webpack_require__.O(undefined, [920,339,428], function() { return __webpack_require__(7079); })
 /******/ 		__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 		return __webpack_exports__;
 /******/ 	};
